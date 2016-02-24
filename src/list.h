@@ -1,11 +1,7 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-struct node {
-  struct node *next;
-  struct node *prev;
-  void *value;
-};
+#include "node.h"
 
 struct list {
   struct node *head;

@@ -1,16 +1,7 @@
 #include <stdlib.h>
 #include "list.h"
 
-static struct node *node_new(void *value);
 static struct node *list_find_node(struct list *this, int index);
-
-static struct node *node_new(void *value) {
-  struct node *node = malloc(sizeof(*node));
-  node->value = value;
-  node->next = 0;
-  node->prev = 0;
-  return node;
-}
 
 struct list *list_new() {
   struct list *this = malloc(sizeof(*this));

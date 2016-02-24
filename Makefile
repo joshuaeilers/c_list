@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -c -O2 -std=c99 -Wall -Wextra
-SRC = src/list.c
+SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
 
 .PHONY: test clean
