@@ -5,7 +5,7 @@ OBJ = $(SRC:.c=.o)
 
 .PHONY: test clean
 
-bin/test: test/test.o $(OBJ)
+bin/test: test.o $(OBJ)
 	mkdir bin
 	$(CC) $^ -o $@
 
@@ -16,4 +16,4 @@ test: bin/test
 	./$<
 
 clean:
-	rm -rf bin *.o src/*.o test/*.o
+	rm -rf bin *.o src/*.o

@@ -1,23 +1,33 @@
 #include <stdlib.h>
 #include "list.h"
 
-static struct node *list_find_node(struct list *this, int index);
+static struct node *node_new(void *value);
+static struct node *list_find_node(struct list *this, size_t index);
+
+static struct node *node_new(void *value) {
+  struct node *node = malloc(sizeof(*node));
+  node->value = value;
+  node->next = 0;
+  node->prev = 0;
+  return node;
+}
 
 struct list *list_new() {
   struct list *this = malloc(sizeof(*this));
   this->head = 0;
   this->tail = 0;
+  this->free = 0;
   this->size = 0;
   return this;
 }
 
-static struct node *list_find_node(struct list *this, int index) {
-  if (index >= this->size || index < 0) {
+static struct node *list_find_node(struct list *this, size_t index) {
+  if (index >= this->size) {
     return 0;
   }
 
   struct node *node = this->head;
-  int mid = this->size >> 1;
+  size_t mid = this->size >> 1;
 
   if (index > mid) {
     index = this->size - index - 1;
@@ -69,7 +79,7 @@ void *list_pop(struct list *this) {
   return value;
 }
 
-void *list_get(struct list *this, int index) {
+void *list_get(struct list *this, size_t index) {
   struct node *node = list_find_node(this, index);
 
   if (!node) {
@@ -79,7 +89,7 @@ void *list_get(struct list *this, int index) {
   return node->value;
 }
 
-void *list_remove(struct list *this, int index) {
+void *list_remove(struct list *this, size_t index) {
   struct node *node = list_find_node(this, index);
 
   if (!node) {
@@ -105,7 +115,7 @@ void *list_remove(struct list *this, int index) {
   return value;
 }
 
-void list_each(struct list *this, void lambda(void *value)) {
+void list_each(struct list *this, void (*lambda)(void *value)) {
   if (!this->size) {
     return;
   }
@@ -124,6 +134,9 @@ void list_free(struct list *this) {
 
   while (cur) {
     next = cur->next;
+    if (this->free) {
+      this->free(cur->value);
+    }
     free(cur);
     cur = next;
   }

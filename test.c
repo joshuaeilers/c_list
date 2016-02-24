@@ -1,6 +1,7 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include "../src/list.h"
+#include "src/list.h"
 
 void test_list_push() {
   struct list *list = list_new();
@@ -105,6 +106,25 @@ void test_list_each() {
   assert(*(int *) list_get(list, 0) == 2);
   assert(*(int *) list_get(list, 1) == 3);
   assert(*(int *) list_get(list, 2) == 4);
+
+  list_free(list);
+}
+
+void custom_list_free(void *value) {
+  *(int *) value = 42;
+}
+
+void test_list_free() {
+  struct list *list = list_new();
+  int *x = malloc(sizeof(*x));
+  *x = 1337;
+  list_push(list, x);
+
+  list->free = custom_list_free;
+
+  list_free(list);
+
+  assert(*x == 42);
 }
 
 int main() {
@@ -113,6 +133,7 @@ int main() {
   test_list_get();
   test_list_remove();
   test_list_each();
+  test_list_free();
 
   puts("All tests succeded!");
   return 0;
