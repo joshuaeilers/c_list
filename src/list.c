@@ -7,23 +7,23 @@ static struct node *list_find_node(struct list *this, size_t index);
 static struct node *node_new(void *value) {
   struct node *node = malloc(sizeof(*node));
   node->value = value;
-  node->next = 0;
-  node->prev = 0;
+  node->next = NULL;
+  node->prev = NULL;
   return node;
 }
 
 struct list *list_new() {
   struct list *this = malloc(sizeof(*this));
-  this->head = 0;
-  this->tail = 0;
-  this->free = 0;
+  this->head = NULL;
+  this->tail = NULL;
+  this->free = NULL;
   this->size = 0;
   return this;
 }
 
 static struct node *list_find_node(struct list *this, size_t index) {
   if (index >= this->size) {
-    return 0;
+    return NULL;
   }
 
   struct node *node = this->head;
@@ -60,7 +60,7 @@ void list_push(struct list *this, void *value) {
 
 void *list_pop(struct list *this) {
   if (!this->size) {
-    return 0;
+    return NULL;
   }
 
   struct node *n = this->tail;
@@ -68,10 +68,10 @@ void *list_pop(struct list *this) {
 
   if (--this->size) {
     this->tail = n->prev;
-    this->tail->next = 0;
+    this->tail->next = NULL;
   } else {
-    this->head = 0;
-    this->tail = 0;
+    this->head = NULL;
+    this->tail = NULL;
   }
 
   free(n);
@@ -83,7 +83,7 @@ void *list_get(struct list *this, size_t index) {
   struct node *node = list_find_node(this, index);
 
   if (!node) {
-    return 0;
+    return NULL;
   }
 
   return node->value;
@@ -93,7 +93,7 @@ void *list_remove(struct list *this, size_t index) {
   struct node *node = list_find_node(this, index);
 
   if (!node) {
-    return 0;
+    return NULL;
   }
 
   void *value = node->value;
